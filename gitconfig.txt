@@ -1,3 +1,2 @@
 git config --global alias.showlog 'log -3 --graph --oneline --decorate'
-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
-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
+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
