@@ -1,4 +1,3 @@
 *.o
-LinkList
-LinkList2
+LinkList*
 seqList

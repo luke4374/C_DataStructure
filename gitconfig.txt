@@ -1,0 +1,1 @@
+git config --global alias.showlog log --all --graph --oneline --decorate
