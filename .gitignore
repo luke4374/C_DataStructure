@@ -1,3 +1,4 @@
 *.o
 LinkList*
 seqList
+SqStack
