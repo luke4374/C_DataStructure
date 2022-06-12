@@ -1,1 +1,1 @@
-git config --global alias.showlog log -3 --graph --oneline --decorate
+git config --global alias.showlog 'log -3 --graph --oneline --decorate'
