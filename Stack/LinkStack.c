@@ -40,6 +40,15 @@ void stack_show(LiStack L){
 	return;	
 }
 
+/* NO HEAD NODE
+LiStack insert(LiStack head, int x){
+	LiStack L = (LiStack)malloc(sizeof(LiStack));	
+	L->data = x;
+	L->next = head;
+	head = L;
+	return head;
+}
+*/
 int main(){
 	int x;
 	LiStack L = init_LiStack();
