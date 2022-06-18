@@ -16,7 +16,7 @@ sqQueue *init_Queue(int n){
 	sqQueue *Q = (sqQueue *)malloc(sizeof(sqQueue));
 	Q->data = (int *)malloc(sizeof(int) * n);
 	Q->top = Q->rear = 0;
-	//diff
+	//Circular Queue
 	Q->count = 0;
 	Q->length = n;
 	return Q;
@@ -61,14 +61,13 @@ int de_Queue(sqQueue *Q){
 void show_Queue(sqQueue *Q){
 	int r = Q->rear;
 	int t = Q->top;
-	int length = (r + MAXSIZE - t) % MAXSIZE;
 	int ind;
 	printf(" Queue(T->%d R->%d): [", Q->top, Q->rear);
-	for(int i = 0; i < length; i++){
+	for(int i = 0; i < Q->count; i++){
 		ind = ( t + i ) % MAXSIZE;	
-		printf(" %d",Q->data[ind]);
+		printf("(%d)%d ",ind, Q->data[ind]);
 	}
-	printf(" ]\n");
+	printf("]\n");
 }
 
 void clear_Queue(sqQueue *Q){
