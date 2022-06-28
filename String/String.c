@@ -14,22 +14,27 @@ String *init_String(int n){
 	return s;
 }
 
-int Input_Str(String *s){
-	if(s == NULL) return 0;
+String * Input_Str(String *s){
+	if(s == NULL) return NULL;
 	fgets(s->data, MAX_LEN, stdin);
 	//fgets will count \n as a charactor, gets won't
 	//printf("%p\n",s->data);
-	String *p = s;
-	while(*(p->data) != '\0'){
+	//坑：String *p = s; p++ 连带着 s++
+	char *p = s->data;
+	printf("1:&s = %p, s->data = %p, &s->data = %p\n", s, s->data, &(s->data));
+	while(*p != '\0'){
 		//printf("*s = %d, s = %s\n",*(s->data),s->data);
-		fputs(p->data, stdout);	
-		if(*(p->data) != '\n'){
+	//	fputs(p->data, stdout);	
+		if(*p != '\n'){
 			s->length++;
 		}
-		p->data++;
+		p++;
 	}
+	
 	//printf("%d\n",s->length);
-	return 1;	
+	printf("2:&s = %p, s->data = %p p->data = %p &s->data = %p\n", s, s->data, p, &(s->data));
+	fputs(s->data, stdout);	
+	return s;	
 }
 
 String *SubString(String *s, int pos, int len){
@@ -44,7 +49,7 @@ String *SubString(String *s, int pos, int len){
 }
 
 void Show_Str(String *s){
-	printf("%p\n",s);
+	printf("length = %d\n",s->length);
 	if(s == NULL) return ;
 	fputs(s->data, stdout);	
 	return ;
@@ -52,7 +57,8 @@ void Show_Str(String *s){
 
 int main(){
 	String *s = init_String(MAX_LEN);
-	Input_Str(s);
+	printf("origin s = %p, &s->data = %p\n", s, &(s->data));
+	s = Input_Str(s);
 	Show_Str(s);
 	String *p = SubString(s, 2, 3); 
 	Show_Str(p);
