@@ -18,21 +18,17 @@ String * Input_Str(String *s){
 	if(s == NULL) return NULL;
 	fgets(s->data, MAX_LEN, stdin);
 	//fgets will count \n as a charactor, gets won't
-	//printf("%p\n",s->data);
-	//坑：String *p = s; p++ 连带着 s++
+	//坑：String *p = s; p->data++ will cause s->data++
 	char *p = s->data;
-	printf("1:&s = %p, s->data = %p, &s->data = %p\n", s, s->data, &(s->data));
 	while(*p != '\0'){
-		//printf("*s = %d, s = %s\n",*(s->data),s->data);
+		//printf("1: p->data= %p, s->data = %p\n",&(p->data), &(s->data));
 	//	fputs(p->data, stdout);	
 		if(*p != '\n'){
 			s->length++;
 		}
 		p++;
 	}
-	
-	//printf("%d\n",s->length);
-	printf("2:&s = %p, s->data = %p p->data = %p &s->data = %p\n", s, s->data, p, &(s->data));
+	printf("write in: ");
 	fputs(s->data, stdout);	
 	return s;	
 }
@@ -41,26 +37,52 @@ String *SubString(String *s, int pos, int len){
 	if(s == NULL) return NULL;
 	if(pos + len > s->length) return NULL;
 	String *p = init_String(MAX_LEN);	
-	for(int i = len; i < s->length; i++){
-		p->data[i - pos] = s->data[len];
-	} 
+	printf("s->data[2] = %s\n",&(s->data[2]));
+	for(int i = pos; i < (pos + len); i++){
+		p->data[i - pos] = s->data[i];
+		//printf("p->data = %s, s->data = %s\n",&(p->data[i - pos]), &(s->data[i]));
+	}
+	printf("p->data = %s\n",p->data);
+	p->length = len;
 	return p;	
 
 }
 
-void Show_Str(String *s){
+int Show_Str(String *s){
+	if(s == NULL) return -1;
 	printf("length = %d\n",s->length);
-	if(s == NULL) return ;
 	fputs(s->data, stdout);	
+	return 1;
+}
+
+void Free_Str(String *s){
+	if(s == NULL) return ;
+	free(s->data);
+	free(s);
 	return ;
+}
+
+int Compare_Str(){
+	printf("Please input string s\n");
+	String *s = init_String(MAX_LEN);
+	s = Input_Str(s);
+	printf("Please input string t\n");
+	String *t = init_String(MAX_LEN);
+	t = Input_Str(t);
+	for(int i = 0; i < s->length && i < t->length; i++){
+		if(s->data[i] != t->data[i])
+			return s->data[i] - t->data[i];
+	}
+	return s->length - t->length;	
+
 }
 
 int main(){
 	String *s = init_String(MAX_LEN);
 	printf("origin s = %p, &s->data = %p\n", s, &(s->data));
-	s = Input_Str(s);
-	Show_Str(s);
-	String *p = SubString(s, 2, 3); 
-	Show_Str(p);
+	printf("show array return %d\n",Show_Str(Input_Str(s))); 
+	printf("show array return %d\n",Show_Str(SubString(s, 2, 3))); 
+	printf("compare S with T return %d\n",Compare_Str());
+	Free_Str(s);
 	return 0;
 }
