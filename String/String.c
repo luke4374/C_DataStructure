@@ -62,13 +62,7 @@ void Free_Str(String *s){
 	return ;
 }
 
-int Compare_Str(){
-	printf("Please input string s\n");
-	String *s = init_String(MAX_LEN);
-	s = Input_Str(s);
-	printf("Please input string t\n");
-	String *t = init_String(MAX_LEN);
-	t = Input_Str(t);
+int Compare_Str(String *s, String *t){
 	for(int i = 0; i < s->length && i < t->length; i++){
 		if(s->data[i] != t->data[i])
 			return s->data[i] - t->data[i];
@@ -77,12 +71,27 @@ int Compare_Str(){
 
 }
 
+int Index(String *s, String *t){
+	int i;
+	while(i <= (s->length + t->length + 1)){
+
+	}
+
+}
+
 int main(){
 	String *s = init_String(MAX_LEN);
 	printf("origin s = %p, &s->data = %p\n", s, &(s->data));
 	printf("show array return %d\n",Show_Str(Input_Str(s))); 
 	printf("show array return %d\n",Show_Str(SubString(s, 2, 3))); 
-	printf("compare S with T return %d\n",Compare_Str());
 	Free_Str(s);
+	//Compare String
+	printf("-----------Compare String----------\nPlease input string s\n");
+	String *str = init_String(MAX_LEN);
+	str = Input_Str(str);
+	printf("Please input string t\n");
+	String *t = init_String(MAX_LEN);
+	t = Input_Str(t);	
+	printf("compare S with T return %d\n",Compare_Str(str, t));
 	return 0;
 }
