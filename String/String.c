@@ -37,7 +37,7 @@ String *SubString(String *s, int pos, int len){
 	if(s == NULL) return NULL;
 	if(pos + len > s->length) return NULL;
 	String *p = init_String(MAX_LEN);	
-	printf("s->data[2] = %s\n",&(s->data[2]));
+//	printf("s->data[2] = %s\n",&(s->data[2]));
 	for(int i = pos; i < (pos + len); i++){
 		p->data[i - pos] = s->data[i];
 		//printf("p->data = %s, s->data = %s\n",&(p->data[i - pos]), &(s->data[i]));
@@ -72,11 +72,14 @@ int Compare_Str(String *s, String *t){
 }
 
 int Index(String *s, String *t){
-	int i;
-	while(i <= (s->length + t->length + 1)){
-
+	int i = 0, x = s->length, y = t->length, k;
+	String *str;
+	while(i <= x + y + 1){
+		str = SubString(s, i, y);
+		if(Compare_Str(str, t) != 0) ++i;
+		else return i;		
 	}
-
+	return -1;
 }
 
 int main(){
@@ -86,12 +89,23 @@ int main(){
 	printf("show array return %d\n",Show_Str(SubString(s, 2, 3))); 
 	Free_Str(s);
 	//Compare String
-	printf("-----------Compare String----------\nPlease input string s\n");
 	String *str = init_String(MAX_LEN);
+	String *t = init_String(MAX_LEN);
+	printf("-----------Compare String----------\nPlease input string s\n");
 	str = Input_Str(str);
 	printf("Please input string t\n");
-	String *t = init_String(MAX_LEN);
 	t = Input_Str(t);	
 	printf("compare S with T return %d\n",Compare_Str(str, t));
+	Free_Str(str);
+	Free_Str(t);
+	//Find SubString
+	String *a = init_String(MAX_LEN);
+	String *b = init_String(MAX_LEN);
+	printf("----------SubString Finding--------\nEnter String a\n");
+	a = Input_Str(a);
+	printf("Enter string b\n");
+	b = Input_Str(b);	
+	printf("SubString Index is %d\n",Index(a, b));
+	
 	return 0;
 }
