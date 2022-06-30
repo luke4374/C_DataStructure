@@ -40,7 +40,6 @@ String *SubString(String *s, int pos, int len){
 		p->data[i - pos] = s->data[i];
 		//printf("p->data = %s, s->data = %s\n",&(p->data[i - pos]), &(s->data[i]));
 	}
-	//printf("p->data = %s\n",p->data);
 	p->length = len;
 	return p;	
 
