@@ -9,23 +9,25 @@ typedef struct Node{
 
 node *Init_Tree(node *n){
 	if(n == NULL) return NULL;
-	int i = 0;
+	int i = 1;
 	node *p = n;
-	printf("n = %p, p = %p\n",n, p);
-	while(i != 10){
+	p+=1;
+	while(i != 11){
 		p->data = i++; 	
 		p++;
 	}
-	printf("n = %p, p = %p\n",n, p);
-	return n;
+	return &n[0];
 }
 
 
 int main(){
 	node Tree[20];
 	node *T = Init_Tree(Tree);
-	for(int i = 0; i < 10; i++,T++){
-		printf("%d\n",T->data);
+	int p = 3;
+	printf("Tree[%d] = %d, left_child[%d] = %d, right_child[%d] = %d\n",p, 
+		T[p].data, 2*p, T[2*p].data, 2*p+1, T[2*p+1].data);   
+	for(int i = 0; i <= 10; i++){
+		printf("%d %p\n",T[i].data, T[i]);
 	}
 	exit(0);
 }
