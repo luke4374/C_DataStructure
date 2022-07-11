@@ -7,41 +7,110 @@ typedef struct Node{
 	struct Node *lchild, *rchild;
 }node, *Tree;
 
-typedef struct Queue{
-	Tree T_Queue;
-	int top, rear;
+typedef struct LinkNode{
+	Tree add;
+	struct LinkNode *next;
+}Li_Node;
+
+typedef struct Li_Queue{
+	Li_Node *front, *rear;
 	int num;
-}Queue,*Que;
+}*Li_Que;
 
-Tree Init_Tree(){
-	Tree t = (Tree)malloc(sizeof(Tree));
-	t->data = 1;
-	t->lchild = NULL;
-	t->rchild = NULL;
-	return t;	
-}
-
-Que Init_Queue(){
-	Que q = (Que)malloc(sizeof(Queue));
-	q->T_Queue = (Tree)malloc(sizeof(node) * 10);
-	q->top = q->rear = 0;
+Li_Que Init_Queue(){
+	//no head node
+	Li_Que q = (Li_Que)malloc(sizeof(Li_Que));
+	q->front = NULL;
+	q->rear = NULL;	
 	q->num = 0;
 	return q;
 }
 
-Tree En_Queue(Que q, Tree node){
-	if(node == NULL) return NULL;
-	q->T_Queue	
-
+void Free_Queue(Li_Que q){
+	if(q == NULL) return ;
+	while(q->front != NULL){
+		free(q->front);
+		q++;
+	}
+	free(q);
+	return ;
 }
 
-int Input_Tree(Tree t, Que q, int val){
+void Show_Queue(Li_Que q){
+	if(q == NULL) return ;
+	Li_Node *n = q->front;
+	while(n){
+		printf("%p -> ", n->add);
+		n = n->next;	
+	}
+	printf(" NULL\n");
+	return ;
+}
+
+int En_Queue(Li_Que q, Tree node){
+	if(node == NULL && q == NULL) return -1;
+	Li_Node *n = (Li_Node *)malloc(sizeof(Li_Node));
+	n->add = node;
+	n->next = NULL;	
+	if(q->front == NULL && q->rear == NULL){
+		q->front = q->rear = n; 
+	}
+	else{
+		q->rear->next = n;	
+		q->rear = n;
+	}
+	q->num++;
+	Show_Queue(q);
+	return 1;
+}
+
+int Is_Empty(Li_Que q){
+	return (q->front == NULL && q->rear == NULL);
+}
+
+int De_Queue(Li_Que q){
+	if(q == NULL) return -1;
+	if(Is_Empty(q)) return -1;
+	Li_Node *n = q->front;	
+	q->front = n->next;
+	if(q->rear = n) q->front = q->rear = NULL;
+	free(n);
+	return 1;		
+}
+
+Tree Get_Child(Li_Que q){
+	if(q == NULL) return NULL;
+	Li_Node *n = q->front;
+	printf("Left = %p, Right = %p\n",n->add->lchild, n->add->rchild);
+	if(n->add->lchild == NULL) return n->add;
+	if(n->add->rchild == NULL) return n->add;
+	else{
+		printf("De_Queue = %d\n",De_Queue(q));
+		return Get_Child(q);
+	}
+}
+
+Tree Init_Tree(Li_Que q){
+	Tree t = (Tree)malloc(sizeof(Tree));
+	t->data = 1;
+	t->lchild = NULL;
+	t->rchild = NULL;
+	En_Queue(q, t);
+	return t;	
+}
+
+int Input_Tree(Tree t, Li_Que q, int val){
 	if(t == NULL) return -1;
 	node *n = (node *)malloc(sizeof(node));
 	n->data = val;
 	n->lchild = NULL;
 	n->rchild = NULL;
-	Tree root = Insert_Queue(q, t);
+	Tree child = Get_Child(q);
+	if(child->lchild == NULL) child->lchild = n;	
+	else child->rchild = n;	
+	En_Queue(q, n);
+	printf("%d GetChild = %p, lchild = %p, rchild = %p\n", 
+			t->data, child, t->lchild, t->rchild);
 #if 0
 	//if( t->lchild != NULL && t->rchild != NULL) Input_Tree(t->lchild, val);
 	//else Input_Tree(t->rchild, val);
@@ -51,7 +120,6 @@ int Input_Tree(Tree t, Que q, int val){
 		if(t->lchild->lchild == NULL) Input_Tree(t->lchild, val);
 		else Input_Tree(t->rchild, val);
 	}
-	printf("%d lchild = %p, rchild = %p\n", t->data, t->lchild, t->rchild);
 #endif
 	return 1;
 }
@@ -65,8 +133,8 @@ void Show_Tree(Tree t){
 }
 
 int main(){
-	Tree T = Init_Tree();
-	Que q = Init_Queue();
+	Li_Que q = Init_Queue();
+	Tree T = Init_Tree(q);
 	int val;
 	scanf("%d",&val);
 	while(val != 999){
