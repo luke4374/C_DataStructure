@@ -39,10 +39,10 @@ void Free_Queue(Li_Que q){
 void Show_Queue(Li_Que q){
 	if(q == NULL) return ;
 	Li_Node *n = q->front;
-	printf("func: %s F_node = %d, L_child = %p, R_child = %p\n", 
-		__func__, n->add->data, n->add->lchild, n->add->rchild);
+	printf("%s(%d) F_node = %d, L_child = %p, R_child = %p\n", 
+		__func__,q->num, n->add->data, n->add->lchild, n->add->rchild);
 	while(n){
-		printf("%p -> ", n->add);
+		printf("%d -> ", n->add->data);
 		n = n->next;	
 	}
 	printf(" NULL\n");
@@ -77,6 +77,7 @@ int De_Queue(Li_Que q){
 	q->front = n->next;
 	if(q->rear == n) q->front = q->rear = NULL;
 	free(n);
+	q->num--;
 	Show_Queue(q);
 	return 1;		
 }
@@ -84,7 +85,6 @@ int De_Queue(Li_Que q){
 Tree *Get_Child(Li_Que q){
 	if(q == NULL) return NULL;
 	Li_Node *n = q->front;
-	printf("%d Left = %p, Right = %p\n",n->add->data,n->add->lchild, n->add->rchild);
 	if(n->add->lchild == NULL) return &(n->add->lchild);
 	if(n->add->rchild == NULL) return &(n->add->rchild);
 	else{
@@ -132,6 +132,8 @@ int main(){
 		Input_Tree(T, q, val);
 		scanf("%d",&val);
 	}
+	printf("In-order traversal: ");
 	Show_Tree(T);
+	printf("\n");
 	exit(0);
 }
