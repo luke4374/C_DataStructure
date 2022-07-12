@@ -39,6 +39,8 @@ void Free_Queue(Li_Que q){
 void Show_Queue(Li_Que q){
 	if(q == NULL) return ;
 	Li_Node *n = q->front;
+	printf("func: %s F_node = %d, L_child = %p, R_child = %p\n", 
+		__func__, n->add->data, n->add->lchild, n->add->rchild);
 	while(n){
 		printf("%p -> ", n->add);
 		n = n->next;	
@@ -73,17 +75,18 @@ int De_Queue(Li_Que q){
 	if(Is_Empty(q)) return -1;
 	Li_Node *n = q->front;	
 	q->front = n->next;
-	if(q->rear = n) q->front = q->rear = NULL;
+	if(q->rear == n) q->front = q->rear = NULL;
 	free(n);
+	Show_Queue(q);
 	return 1;		
 }
 
-Tree Get_Child(Li_Que q){
+Tree *Get_Child(Li_Que q){
 	if(q == NULL) return NULL;
 	Li_Node *n = q->front;
-	printf("Left = %p, Right = %p\n",n->add->lchild, n->add->rchild);
-	if(n->add->lchild == NULL) return n->add;
-	if(n->add->rchild == NULL) return n->add;
+	printf("%d Left = %p, Right = %p\n",n->add->data,n->add->lchild, n->add->rchild);
+	if(n->add->lchild == NULL) return &(n->add->lchild);
+	if(n->add->rchild == NULL) return &(n->add->rchild);
 	else{
 		printf("De_Queue = %d\n",De_Queue(q));
 		return Get_Child(q);
@@ -105,27 +108,15 @@ int Input_Tree(Tree t, Li_Que q, int val){
 	n->data = val;
 	n->lchild = NULL;
 	n->rchild = NULL;
-	Tree child = Get_Child(q);
-	if(child->lchild == NULL) child->lchild = n;	
-	else child->rchild = n;	
+	Tree *child = Get_Child(q);
+	*child = n;
 	En_Queue(q, n);
-	printf("%d GetChild = %p, lchild = %p, rchild = %p\n", 
-			t->data, child, t->lchild, t->rchild);
-#if 0
-	//if( t->lchild != NULL && t->rchild != NULL) Input_Tree(t->lchild, val);
-	//else Input_Tree(t->rchild, val);
-	if(t->lchild == NULL) t->lchild = n;
-	else if(t->rchild == NULL) t->rchild = n;
-	else{
-		if(t->lchild->lchild == NULL) Input_Tree(t->lchild, val);
-		else Input_Tree(t->rchild, val);
-	}
-#endif
 	return 1;
 }
 
 void Show_Tree(Tree t){
 	if(t == NULL) return ;
+	//In-order traversal
 	if(t->lchild != NULL) Show_Tree(t->lchild);
 	printf("%d ",t->data);
 	if(t->rchild != NULL) Show_Tree(t->rchild);
