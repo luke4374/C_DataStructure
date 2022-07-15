@@ -2,11 +2,18 @@
 #include <stdlib.h>
 #define MAX_OP 10
 
+
+typedef struct ThreadNode{
+	int data;
+	struct ThreadNode *lchild, *rchild;
+	int ltag,rtag;
+}ThreadNode, *Tree;
+/*
 typedef struct Node{
 	int data;
 	struct Node *lchild, *rchild;
 }node, *Tree;
-
+*/
 typedef struct LinkNode{
 	Tree add;
 	struct LinkNode *next;
@@ -16,6 +23,9 @@ typedef struct Li_Queue{
 	Li_Node *front, *rear;
 	int num;
 }*Li_Que;
+
+//constant Threadnode pointer
+ThreadNode *pre;
 
 Li_Que Init_Queue(){
 	//no head node
@@ -98,13 +108,14 @@ Tree Init_Tree(Li_Que q){
 	t->data = 1;
 	t->lchild = NULL;
 	t->rchild = NULL;
+	t->ltag = t->rtag = 0;
 	En_Queue(q, t);
 	return t;	
 }
 
 int Input_Tree(Tree t, Li_Que q, int val){
 	if(t == NULL) return -1;
-	node *n = (node *)malloc(sizeof(node));
+	ThreadNode *n = (ThreadNode *)malloc(sizeof(ThreadNode));
 	n->data = val;
 	n->lchild = NULL;
 	n->rchild = NULL;
@@ -112,6 +123,44 @@ int Input_Tree(Tree t, Li_Que q, int val){
 	Tree *child = Get_Child(q);
 	*child = n;
 	En_Queue(q, *child);
+	return 1;
+}
+
+int Visit_node(Tree t){
+	if(t == NULL) return -1;
+	if(t->lchild == NULL){
+		//pre-Thread
+		t->ltag = 1;
+		pre = t;
+	}		
+	if(pre != NULL && pre->rchild == NULL){
+		//post-Thread
+		pre->rchild = t;
+		pre->rtag = 1;	
+	}	
+	pre = t;
+	printf("pre = %p\n",pre);
+	return 1;
+}
+
+void In_Thread(Tree t){
+	if(t == NULL) return ;
+	//In-order traversal
+	if(t->lchild != NULL) In_Thread(t->lchild);
+	printf("%s %d\n",__func__, __LINE__);
+	Visit_node(t);
+	if(t->rchild != NULL) In_Thread(t->rchild);
+	return ;
+}
+
+int Create_InThread(Tree t){
+	if(t == NULL) return -1;
+	pre = NULL;
+	printf("pre = %p\n",pre);
+	In_Thread(t);
+	if(pre->rchild == NULL){
+		pre->rtag = 1;
+	} 
 	return 1;
 }
 
@@ -133,6 +182,7 @@ void Free_Tree(Tree t){
 }
 
 int main(){
+/*
 	Li_Que q = Init_Queue();
 	Tree T = Init_Tree(q);
 	printf("TREE:%p\n",T);
@@ -145,6 +195,18 @@ int main(){
 	printf("In-order traversal: ");
 	Show_Tree(T);
 	printf("\n");
+*/
+	Li_Que q = Init_Queue();
+	Tree T = Init_Tree(q);
+	int val;
+	scanf("%d",&val);
+	while(val != 999){
+		Input_Tree(T, q, val);
+		scanf("%d",&val);
+	}
+	printf("Tree = %p\n",T);
+	Create_InThread(T);
+	Show_Tree(T);
 	//FREE MEMORY
 	Free_Tree(T);
 	Free_Queue(q);	
