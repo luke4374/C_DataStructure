@@ -1,15 +1,24 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<time.h>
 
 typedef struct Linknode{
 	int data;
 	struct Linknode *next;
-}Linknode,*LiStack;
+}Linknode;
+
+typedef struct LinkStack{
+	struct Linknode *next;
+}*LiStack;
 
 LiStack init_LiStack(){
 	LiStack L = (LiStack)malloc(sizeof(LiStack));
 	L->next = NULL;
 	return L;	
+}
+
+int Is_empty(LiStack L){
+	return L->next == NULL;
 }
 
 int stack_Push(LiStack L, int x){
@@ -23,9 +32,10 @@ int stack_Push(LiStack L, int x){
 
 int stack_Pop(LiStack L){
 	if(L==NULL) return 0;
-	if(L->next == NULL) return 0;
+	if(Is_empty(L)) return 0;
 	Linknode *p = L->next;
 	L->next = p->next;
+	free(p);
 	return 1;
 }
 
@@ -40,6 +50,15 @@ void stack_show(LiStack L){
 	return;	
 }
 
+void Free_Stack(LiStack L){
+	if(L == NULL) return ;
+	while(!Is_empty(L)){
+		stack_Pop(L);
+	}
+	free(L);
+	return ;
+}
+
 /* NO HEAD NODE
 LiStack insert(LiStack head, int x){
 	LiStack L = (LiStack)malloc(sizeof(LiStack));	
@@ -50,19 +69,25 @@ LiStack insert(LiStack head, int x){
 }
 */
 int main(){
-	int x;
+	srand(time(0));	
 	LiStack L = init_LiStack();
-	scanf("%d",&x);
-	while(x!=999){
-		printf("Push %d into Stack, return%d\n",x,stack_Push(L, x));	
-		stack_show(L);
-		scanf("%d",&x);
+
+	for(int i = 0; i < 10; i++){
+		int op = rand() % 3;
+		int val = rand() % 100;
+		switch(op){
+			case 0:
+			case 1:{
+				printf("Push %d into Stack, return %d\n",val 
+						,stack_Push(L, val));	
+				stack_show(L);
+			}break;
+			case 2:{
+				printf("Pop! return %d\n",stack_Pop(L));	
+			}break;
+		}
 	}
-	scanf("%d",&x);
-	while(x!=999){
-		printf("Pop! return%d\n",stack_Pop(L));	
-		stack_show(L);
-		scanf("%d",&x);
-	}
+
+	Free_Stack(L);	
 	exit(0);
 }
