@@ -98,7 +98,7 @@ int main(){
 		}
 		show_Queue(q);
 	}	
-	
+	clear_Queue(q);	
 
 	exit(0);
 }
