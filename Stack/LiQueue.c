@@ -34,7 +34,7 @@ int En_Queue(LinkQueue *L, int x){
 }
 
 int De_Queue(LinkQueue *L){
-	if(L==NULL) return 0;
+	if(L == NULL) return 0;
 	if(Is_Empty(L)) return -1;
 	LinkNode *n = L->front->next;
 	L->front->next = n->next;
@@ -45,15 +45,27 @@ int De_Queue(LinkQueue *L){
 	return 1;
 }
 
+void Free_Queue(LinkQueue *L){
+	if(L == NULL) return ;
+	LinkNode *n = L->front->next;
+	while(!Is_Empty(L)){
+		De_Queue(L);
+	}	
+	free(L->front);
+	free(L);
+	return ;
+}
+
 void show(LinkQueue *L){
 	if(L==NULL) return ;
 	LinkNode *n = L->front->next;
-	printf("LinkQueue: [");
+	printf("LinkQueue: [ ");
 	while(n){
 		printf(" %d -> ", n->data);
 		n = n->next;	
 	}
-	printf("NULL ] front->next = %p rear = %p\n", L->front->next, L->rear);
+	printf("NULL ]\n");
+	//printf("NULL ] front = %p front->next = %p rear = %p\n", L->front, L->front->next, L->rear);
 
 	return ;
 }
@@ -74,5 +86,6 @@ int main(){
 		}	
 		show(L);
 	}	
+	Free_Queue(L);
 	exit(0);
 }
