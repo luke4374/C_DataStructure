@@ -43,8 +43,6 @@ int Is_Empty(Li_Que q){
 void Show_Queue(Li_Que q){
 	if(q == NULL || q->front == NULL) return ;
 	Li_Node *n = q->front;
-	printf("%s(%d) F_node = %p, L_child = %p, R_child = %p\n", 
-		__func__,q->num, n->add, n->add->lchild, n->add->rchild);
 	while(n){
 		printf("%d -> ", n->add->data);
 		n = n->next;	
@@ -127,11 +125,10 @@ int Input_Tree(Tree t, Li_Que q, int val){
 }
 
 int Visit_node(Tree t){
-	if(t == NULL) return -1;
 	if(t->lchild == NULL){
 		//pre-Thread
+		t->lchild = pre;
 		t->ltag = 1;
-		pre = t;
 	}		
 	if(pre != NULL && pre->rchild == NULL){
 		//post-Thread
@@ -139,24 +136,21 @@ int Visit_node(Tree t){
 		pre->rtag = 1;	
 	}	
 	pre = t;
-	printf("pre = %p\n",pre);
 	return 1;
 }
 
 void In_Thread(Tree t){
 	if(t == NULL) return ;
 	//In-order traversal
-	if(t->lchild != NULL) In_Thread(t->lchild);
-	printf("%s %d\n",__func__, __LINE__);
+	In_Thread(t->lchild);
 	Visit_node(t);
-	if(t->rchild != NULL) In_Thread(t->rchild);
+	In_Thread(t->rchild);
 	return ;
 }
 
 int Create_InThread(Tree t){
 	if(t == NULL) return -1;
 	pre = NULL;
-	printf("pre = %p\n",pre);
 	In_Thread(t);
 	if(pre->rchild == NULL){
 		pre->rtag = 1;
@@ -167,35 +161,22 @@ int Create_InThread(Tree t){
 void Show_Tree(Tree t){
 	if(t == NULL) return ;
 	//In-order traversal
-	if(t->lchild != NULL) Show_Tree(t->lchild);
-	printf("%d ",t->data);
-	if(t->rchild != NULL) Show_Tree(t->rchild);
+	if(t->lchild != NULL && t->ltag != 1) Show_Tree(t->lchild);
+	printf("LChild(%d) = %p, T(%p) = %d RChild(%d) = %p\n",
+			t->ltag, t->lchild, t, t->data, t->rtag, t->rchild);
+	if(t->rchild != NULL && t->rtag != 1) Show_Tree(t->rchild);
 	return ;
 }
 
 void Free_Tree(Tree t){
 	if(t == NULL) return ;
-	Free_Tree(t->lchild);
-	Free_Tree(t->rchild);
+	if(t->ltag != 1) Free_Tree(t->lchild);
+	if(t->rtag != 1) Free_Tree(t->rchild);
 	free(t);
 	return ;
 }
 
 int main(){
-/*
-	Li_Que q = Init_Queue();
-	Tree T = Init_Tree(q);
-	printf("TREE:%p\n",T);
-	int val;
-	scanf("%d",&val);
-	while(val != 999){
-		Input_Tree(T, q, val);
-		scanf("%d",&val);
-	}
-	printf("In-order traversal: ");
-	Show_Tree(T);
-	printf("\n");
-*/
 	Li_Que q = Init_Queue();
 	Tree T = Init_Tree(q);
 	int val;
@@ -204,7 +185,6 @@ int main(){
 		Input_Tree(T, q, val);
 		scanf("%d",&val);
 	}
-	printf("Tree = %p\n",T);
 	Create_InThread(T);
 	Show_Tree(T);
 	//FREE MEMORY
