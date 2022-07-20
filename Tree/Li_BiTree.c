@@ -1,14 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #define MAX_OP 10
 
 typedef struct Node{
 	int data;
 	struct Node *lchild, *rchild;
-}node, *Tree;
+}node;
+
+typedef struct Tree{
+	struct Node *node;
+	int total;
+}*Tree;
 
 typedef struct LinkNode{
-	Tree add;
+	struct Node *add;
 	struct LinkNode *next;
 }Li_Node;
 
@@ -27,7 +33,7 @@ Li_Que Init_Queue(){
 }
 
 int Is_Empty(Li_Que q){
-	return q->front == NULL && q->rear == NULL;
+	return (q->front == NULL && q->rear == NULL);
 }
 
 void Show_Queue(Li_Que q){
@@ -43,11 +49,12 @@ void Show_Queue(Li_Que q){
 	return ;
 }
 
-int En_Queue(Li_Que q, Tree node){
-	if(node == NULL && q == NULL) return -1;
+int En_Queue(Li_Que q, node *node, int show){
+	if(node == NULL || q == NULL) return -1;
 	Li_Node *n = (Li_Node *)malloc(sizeof(Li_Node));
 	n->add = node;
 	n->next = NULL;	
+	q->num++;
 	if(Is_Empty(q)){
 		q->front = q->rear = n; 
 	}
@@ -55,25 +62,27 @@ int En_Queue(Li_Que q, Tree node){
 		q->rear->next = n;	
 		q->rear = n;
 	}
-	q->num++;
-	Show_Queue(q);
+	if(show == 1) Show_Queue(q);
 	return 1;
 }
 
 int De_Queue(Li_Que q){
 	if(q == NULL) return -1;
 	if(Is_Empty(q)) return -1;
-	Li_Node *n = q->front;	
-	q->front = n->next;
 	if(q->front == q->rear){
+		Li_Node *n = q->front;	
 		q->front = q->rear = NULL;
+		free(n);
+	}else{
+		Li_Node *n = q->front;	
+		q->front = n->next;
+		free(n);
+		q->num--;
 	}
-	free(n);
-	q->num--;
 	return 1;		
 }
 
-Tree *Get_Child(Li_Que q){
+node **Get_Child(Li_Que q){
 	if(q == NULL) return NULL;
 	Li_Node *n = q->front;
 	if(n->add->lchild == NULL) return &(n->add->lchild);
@@ -95,10 +104,14 @@ void Free_Queue(Li_Que q){
 
 Tree Init_Tree(Li_Que q){
 	Tree t = (Tree)malloc(sizeof(*t));
+/*
 	t->data = 1;
 	t->lchild = NULL;
 	t->rchild = NULL;
 	En_Queue(q, t);
+*/
+	t->node = NULL;
+	t->total = 0;
 	return t;	
 }
 
@@ -108,31 +121,68 @@ int Input_Tree(Tree t, Li_Que q, int val){
 	n->data = val;
 	n->lchild = NULL;
 	n->rchild = NULL;
-	//node **
-	Tree *child = Get_Child(q);
-	*child = n;
-	En_Queue(q, *child);
+	if(t->node == NULL){
+		t->node = n;
+		En_Queue(q, n, 1);
+		t->total++;
+	}else{
+		//node **
+		node **child = Get_Child(q);
+		*child = n;
+		En_Queue(q, *child, 1);
+		t->total++;
+	}
 	return 1;
 }
 
-void Show_Tree(Tree t){
-	if(t == NULL) return ;
+void Show_Tree(node *n){
+	if(n == NULL) return ;
 	//In-order traversal
-	if(t->lchild != NULL) Show_Tree(t->lchild);
-	printf("%d ",t->data);
-	if(t->rchild != NULL) Show_Tree(t->rchild);
+	if(n->lchild != NULL) Show_Tree(n->lchild);
+	printf("%d ",n->data);
+	if(n->rchild != NULL) Show_Tree(n->rchild);
+	return ;
+}
+
+void Visit_node(Li_Que q, Tree t){
+	if(q == NULL) return;
+	En_Queue(q, t->node, 0);	
+	Li_Node *n = q->front;
+	if(n->add->lchild != NULL) En_Queue(q, n->add->lchild, 0);
+	if(n->add->rchild != NULL) En_Queue(q, n->add->rchild, 0);
+	while(n){
+		printf("%d ", n->add->data);
+		n = n->next;	
+	}
+	printf("\n");
+	return;
+}
+
+void Level_Traversal(Tree t){
+	if(t == NULL) return;
+	Li_Que q = (Li_Que)malloc(sizeof(*q));
+	q->front = q->rear = NULL;
+	Visit_node(q, t);
+	Free_Queue(q);
+	return ;
+}
+
+void Free_TNode(node *n){
+	if(n == NULL) return ;
+	if(n->lchild != NULL)Free_TNode(n->lchild);
+	if(n->rchild != NULL)Free_TNode(n->rchild);
+	free(n);
 	return ;
 }
 
 void Free_Tree(Tree t){
-	if(t == NULL) return ;
-	Free_Tree(t->lchild);
-	Free_Tree(t->rchild);
+	if(t == NULL) return;
+	Free_TNode(t->node);
 	free(t);
 	return ;
 }
 
-int main(){
+int main(int argc, char *argv[]){
 	Li_Que q = Init_Queue();
 	Tree T = Init_Tree(q);
 	printf("TREE:%p\n",T);
@@ -143,8 +193,9 @@ int main(){
 		scanf("%d",&val);
 	}
 	printf("In-order traversal: ");
-	Show_Tree(T);
+	Show_Tree(T->node);
 	printf("\n");
+	Level_Traversal(T);
 	//FREE MEMORY
 	Free_Tree(T);
 	Free_Queue(q);	
