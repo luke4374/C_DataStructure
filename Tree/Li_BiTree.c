@@ -102,7 +102,7 @@ void Free_Queue(Li_Que q){
 	return ;
 }
 
-Tree Init_Tree(Li_Que q){
+Tree Init_Tree(){
 	Tree t = (Tree)malloc(sizeof(*t));
 	t->node = NULL;
 	t->total = 0;
@@ -182,8 +182,7 @@ void Free_Tree(Tree t){
 
 int main(int argc, char *argv[]){
 	Li_Que q = Init_Queue();
-	Tree T = Init_Tree(q);
-	printf("TREE:%p\n",T);
+	Tree T = Init_Tree();
 	int val;
 	scanf("%d",&val);
 	while(val != 999){
