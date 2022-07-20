@@ -104,12 +104,6 @@ void Free_Queue(Li_Que q){
 
 Tree Init_Tree(Li_Que q){
 	Tree t = (Tree)malloc(sizeof(*t));
-/*
-	t->data = 1;
-	t->lchild = NULL;
-	t->rchild = NULL;
-	En_Queue(q, t);
-*/
 	t->node = NULL;
 	t->total = 0;
 	return t;	
@@ -147,12 +141,16 @@ void Show_Tree(node *n){
 void Visit_node(Li_Que q, Tree t){
 	if(q == NULL) return;
 	En_Queue(q, t->node, 0);	
-	Li_Node *n = q->front;
-	if(n->add->lchild != NULL) En_Queue(q, n->add->lchild, 0);
-	if(n->add->rchild != NULL) En_Queue(q, n->add->rchild, 0);
+	Li_Node *n = q->front, *m = n;
 	while(n){
-		printf("%d ", n->add->data);
-		n = n->next;	
+		if(n->add->lchild != NULL) En_Queue(q, n->add->lchild, 0);
+		if(n->add->rchild != NULL) En_Queue(q, n->add->rchild, 0);
+		n = n->next;
+	}
+	printf("Level_Traversal: ");
+	while(m){
+		printf("%d ", m->add->data);
+		m = m->next;	
 	}
 	printf("\n");
 	return;
