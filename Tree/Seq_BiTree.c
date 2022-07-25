@@ -4,7 +4,7 @@
 
 typedef struct Node{
 	int data;
-	struct Node *lchild, *rchild;
+	//struct Node *lchild, *rchild;
 }node;
 
 node *Init_Tree(node *n){
@@ -26,8 +26,8 @@ int main(){
 	int p = 3;
 	printf("Tree[%d] = %d, left_child[%d] = %d, right_child[%d] = %d\n",p, 
 		T[p].data, 2*p, T[2*p].data, 2*p+1, T[2*p+1].data);   
-	for(int i = 0; i <= 10; i++){
-		printf("%d %p\n",T[i].data, T[i]);
+	for(int i = 1; i <= 10; i++){
+		printf("%d %p\n",T[i].data, &(T[i]));
 	}
 	exit(0);
 }
