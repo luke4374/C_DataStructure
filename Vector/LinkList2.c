@@ -6,10 +6,10 @@ typedef struct ListNode{
 	struct ListNode *prior,*next;
 }LNode, *LinkList;
 
-LinkList Head_insert(LinkList L){
+LinkList Head_insert(){
 	LNode *n;
 	int x;
-	L = (LinkList)malloc(sizeof(LNode));
+	LinkList L = (LinkList)malloc(sizeof(LNode));
 	L->next = NULL;
 	scanf("%d",&x);
 	while(x!=999){
@@ -26,8 +26,9 @@ LinkList Head_insert(LinkList L){
 void show_List(LinkList L){
 	if(L == NULL) return ;
 	LNode *p = L->next;
-	for(;p; p = p->next){
+	while(p){
 		printf("%d -> ",p->data);
+		p = p->next;
 	}	
 	printf("NULL\n");
 	return ;
@@ -35,33 +36,34 @@ void show_List(LinkList L){
 
 int Free_list(LinkList L){
 	if(L == NULL) return 0;
-	LNode *p = L->next,*q;
-	for(p; p->next != NULL; ){
-		q = p->next;
+	LNode *p = L->next;
+	while(p != NULL){
+		L->next = p->next;
 		free(p);
-		p = q;
+		p = L->next;
 	}
+	free(L);
 	return 1;
 }
 
-LinkList Get_ele(LinkList L, int i){
+int Get_ele(LinkList L, int i){
 	LNode *p = L->next;
 	int x;
-	for(x = 1; x < i; x++){
-		if(p->next == NULL) return NULL;
-		p=p->next;
+	for(x = 0; x < i; x++){
+		if(p->next == NULL) return -1;
+		p = p->next;
 	}
-	return p;
+	printf("add = %p, value = %d\n",p ,p->data);
+	return 1;
 }
 
 int main(){
 	int x;
 	//LinkList l = ListNode * l
-	LinkList l = Head_insert(l);
+	LinkList l = Head_insert();
 	show_List(l);
 	scanf("%d",&x);
-	LNode* n = Get_ele(l, x-1);
-	printf("add = %p, value = %d\n",n ,n->data);
+	Get_ele(l, x-1);
 	Free_list(l);	
 	return 0;
 }
