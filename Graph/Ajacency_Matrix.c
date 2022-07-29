@@ -1,10 +1,11 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<string.h>
 #define MAX_Vex 10
 
 typedef struct{
 	char Vertex[MAX_Vex];
-	//int Edge[MAX_Vex][MAX_Vex];
+//	int Edge[MAX_Vex][MAX_Vex];
 	int Edge[MAX_Vex*(MAX_Vex -1) / 2];
 	int Vnum,Enum;
 }*MGraph;
@@ -13,7 +14,6 @@ MGraph Init_Graph(int Vertex_num){
 	MGraph graph = (MGraph)malloc(sizeof(*graph));
 	graph->Vnum = Vertex_num;
 	graph->Enum = 0;
-	int Tri_edge = Vertex_num * (Vertex_num - 1) / 2;
 	for(int i = 0; i < Vertex_num; i++){
 		graph->Vertex[i] = 65 + i; 	
 /*
@@ -22,9 +22,7 @@ MGraph Init_Graph(int Vertex_num){
 		}	
 */
 	}
-	for(int j = 0; j < Tri_edge; j++){
-		graph->Edge[j] = 0;
-	} 
+	memset(graph->Edge, 0,sizeof(graph->Edge));
 	return graph;
 }
 
@@ -37,21 +35,15 @@ void Show_Matrix(MGraph G, int Vertex_num){
 		if(x == Vertex_num - 1) printf("\n");
 		x++;
 	}
-/*
-	for(int i = 0; i < Vertex_num; i++){
-		for(int j = 0; j < Vertex_num; j++){
-			printf("%d ", G->Edge[i][j]);
-		}
-		printf("\n");
-	}
-*/
 	for(int i = 0; i < Vertex_num; i++){
 		for(int j = 0; j < Vertex_num; j++){
 			if(i >= j){
 				//Starts at 0 
-				printf("(%d)%d ", i * (i + 1) / 2 + j, G->Edge[i * (i + 1) / 2 + j]);
+				printf("(%d)%d ", i * (i + 1) / 2 + j, 
+								G->Edge[i * (i + 1) / 2 + j]);
 			}else if(i < j){	
-				printf("(%d)%d ", j * (j + 1) / 2 + i, G->Edge[j * (j + 1) / 2 + i]);
+				printf("(%d)%d ", j * (j + 1) / 2 + i, 
+								G->Edge[j * (j + 1) / 2 + i]);
 			}
 		}
 		printf("\n");
