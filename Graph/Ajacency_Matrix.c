@@ -39,10 +39,10 @@ void Show_Matrix(MGraph G, int Vertex_num){
 		for(int j = 0; j < Vertex_num; j++){
 			if(i >= j){
 				//Starts at 0 
-				printf("(%d)%d ", i * (i + 1) / 2 + j, 
+				printf("(%2d)%d ", i * (i + 1) / 2 + j, 
 								G->Edge[i * (i + 1) / 2 + j]);
 			}else if(i < j){	
-				printf("(%d)%d ", j * (j + 1) / 2 + i, 
+				printf("(%2d)%d ", j * (j + 1) / 2 + i, 
 								G->Edge[j * (j + 1) / 2 + i]);
 			}
 		}
@@ -63,10 +63,12 @@ void Insert_Edge(MGraph G){
 		x = j * (j - 1) / 2 + i - 1;
 	}
 	G->Edge[x] = 1;
+	G->Enum++;
+	printf("Edge(%d):[ ",G->Enum);
 	for(int m = 0; m < 10; m++){
 		printf("%d ",G->Edge[m]);
 	}
-	printf("\n");
+	printf("]\n");
 	return ;	
 }
 
