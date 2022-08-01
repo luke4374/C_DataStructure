@@ -25,7 +25,6 @@ ALGraph *Init_Graph(int total_vex){
 	ALGraph *G = (ALGraph *)malloc(sizeof(ALGraph));
 	G->Vex_num = total_vex; 
 	G->Edge_num = 0;
-	//G->Graph = (Adj_List *)malloc(sizeof(Adj_Node));	
 	for(int i = 0; i < total_vex; i++){
 		G->Graph[i].Vertex = 65 + i;
 		G->Graph[i].first = NULL;
@@ -56,22 +55,11 @@ void Insert_Edge(ALGraph *G, int out, int in){
 	return;	
 }
 
-void De_Queue(Edge_Node *first){
-	if(first == NULL) return;
-	Edge_Node *f = first;
-	while(first){
-		free(first);
-		first = f->next;	
-		f = first->next;
-	}
-	return;
-}
-
 void Free_Graph(ALGraph *G){
 	if(G == NULL) return ;
 	for(int i = 0; i < G->Vex_num; i++){
 		Edge_Node *first = G->Graph[i].first;
-		if(first != NULL){	
+		while(first != NULL){	
 			free(G->Graph[i].first);
 			G->Graph[i].first = first->next;	
 			first = G->Graph[i].first->next;
