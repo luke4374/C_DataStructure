@@ -46,13 +46,15 @@ void Show_Graph(ALGraph *G){
 	}
 	return;
 }
-void Insert_Edge(ALGraph *G, int out, int in){
-	if(G == NULL) return;
+
+int Insert_Edge(ALGraph *G, int out, int in){
+	if(G == NULL) return -1;
+	if(out == in) return -1;
 	Edge_Node *e = (Edge_Node *)malloc(sizeof(Edge_Node));
 	e->Vex_num = in;
 	e->next = G->Graph[out].first;
 	G->Graph[out].first = e;
-	return;	
+	return 1;	
 }
 
 void Free_Graph(ALGraph *G){
@@ -60,10 +62,9 @@ void Free_Graph(ALGraph *G){
 	for(int i = 0; i < G->Vex_num; i++){
 		Edge_Node *first = G->Graph[i].first;
 		while(first != NULL){	
-			free(G->Graph[i].first);
 			G->Graph[i].first = first->next;	
-			first = G->Graph[i].first->next;
-		//	De_Queue(first);	
+			free(first);
+			first = G->Graph[i].first;
 		}
 	}
 	free(G);
@@ -74,17 +75,10 @@ int main(){
 	srand(time(0));
 	ALGraph *G = Init_Graph(MAX_SIZE);
 	for(int i = 0; i < MAX_SIZE; i++){
-		int op = rand() % 3;
 		int out = rand() % 10;
 		int in = rand() % 10;
-		switch(op){
-			case 0:
-			case 1:{
-				if(out != in)	Insert_Edge(G, out, in);	
-			}break;
-			case 2:	
-				break;
-		}
+		printf("Input Edge %d -> %d, return %d\n",
+				out, in, Insert_Edge(G, out, in));	
 	}
 	Show_Graph(G);
 	Free_Graph(G);
