@@ -22,7 +22,7 @@ array *Init_Array(){
 int Show_Array(array *a){
 	if(a == NULL) return 0;
 	for(int i = 0; i < MAX_LEN; i++){
-		printf("%d ",a->data[i]);
+		printf("[%d]%d ", i, a->data[i]);
 	}
 	printf("\n");
 	return 1;
