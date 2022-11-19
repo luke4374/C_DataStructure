@@ -28,6 +28,21 @@ int Show_Array(array *a){
 	return 1;
 }
 
+void Show_QSwitch(int *a, int low, int high){
+	if(a == NULL) return;
+	printf("Switch a[%d]=%d & a[%d]=%d\n", low, a[low], high, a[high]);
+	return;
+}
+
+void Show_Qlist(int *a){
+	if(a == NULL) return;
+	for(int i = 0; i < MAX_LEN; i++){
+		printf("(%d)%d ", i, a[i]);	
+	}
+	printf("\n");
+	return;
+}
+
 void Free_Array(array *a){
 	if(a == NULL) return ;
 	free(a->data);
